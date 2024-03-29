@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+option go_package = "github.com/k3s-io/kine/pkg/drivers/messagestructures";
+
+package MessageStructures;
+
+service DatabaseCommunication {
+    rpc RequestPublish (KineInsert) returns (ResponsePublish) {}
+
+    // rpc RequestUpdate (KineInsert) returns (ResponsePublish) {}
+    
+    rpc RequestDispose (KineDispose) returns (ResponseDispose) {}
+
+    rpc RequestMassDisposeCompaction (KineMassDisposeCompaction) returns (ResponseMassDisposeCompaction) {}
+
+    rpc RequestQueryGeneric (KineQueryGeneric) returns (ResponseQueryGeneric) {}
+
+    rpc RequestQueryThree (KineQueryThree) returns (ResponseQueryThree) {}
+
+    rpc RequestQueryCompactRevision (KineQueryCompactRevision) returns (ResponseQueryCompactRevision) {}
+
+    rpc RequestQueryMaximumId (KineQueryMaximumId) returns (ResponseQueryMaximumId) {}
+
+    rpc RequestTest (KineTest) returns (ResponseTest) {}
+}
+
+message KineTest {
+    int64 testid = 1;
+    string content = 2;
+}
+
+message ResponseTest {
+    int64 responseid = 1;
+    string content = 2;
+}
+
+message KineInsert {
+    int64 id = 1; // Kine can request a returning id
+    string name = 2;
+    int64 created = 3;
+    int64 deleted = 4;
+    int64 create_revision = 5;
+    int64 prev_revision = 6;
+    int64 lease = 7;
+    bytes value = 8;
+    bytes old_value = 9;
+}
+
+message KineDispose {
+    int64 id = 1;
+}
+
+message KineMassDisposeCompaction {
+    int64 param1 = 1;
+    int64 param2 = 2;
+}
+
+message KineQueryGeneric {
+    int32 query_identifier = 1;     // [int32] Used by all queries
+    string param1 = 2;              // [std::string] Used by all queries
+    string param2 = 3;              // [std::string] Used by all queries
+    string param3 = 4;              // [std::string] Used by queries 09 and 11
+    string param4 = 5;              // [std::string] Used by query 09
+    string param5 = 6;              // [std::string] Used by query 09
+    sint64 limit = 7;               // [int64] Used by all queries (-1 indicates no limit) <-- Using sint64 type to support signed integers
+}
+
+message KineQueryThree {
+    string param1 = 1; 
+    string param2 = 2;
+}
+
+message KineQueryCompactRevision {
+
+}
+
+message KineQueryMaximumId {
+
+}
+
+message ResponsePublish {
+    bool success = 1;
+    optional int64 returning_id = 2; // Used when Kine doesn't provide an id
+}
+
+message ResponseDispose {
+    bool success = 1;
+}
+
+message ResponseMassDisposeCompaction {
+    bool success = 1;
+    int64 deleted_rows = 2;
+}
+
+message QueryGenericRow {
+    int64 max_id = 1;
+    int64 compaction_prev_revision = 2;
+    int64 theid = 3;
+    string name = 4;
+    int64 created = 5;
+    int64 deleted = 6;
+    int64 create_revision = 7;
+    int64 prev_revision = 8;
+    int64 lease = 9;
+    bytes value = 10;
+    bytes old_value = 11;
+}
+
+message ResponseQueryGeneric {
+    repeated QueryGenericRow row = 1;
+}
+
+message ResponseQueryThree {
+    int64 id = 1;
+    int64 count = 2;
+}
+
+message ResponseQueryCompactRevision {
+    int64 id = 1;
+}
+
+message ResponseQueryMaximumId {
+    int64 id = 1;
+}
