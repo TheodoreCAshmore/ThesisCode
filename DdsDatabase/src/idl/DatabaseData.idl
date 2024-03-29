@@ -1,0 +1,25 @@
+module DatabaseData
+{
+	struct Msg
+	{                                   //  Type in C++ as per the C++ DDS PSM - https://www.omg.org/spec/DDS-PSM-Cxx/1.0/PDF
+        long id;               			//  uint32_t
+        string<630> name;               //  std::string
+		long created;                   //  int32_t
+		long deleted;                   //  int32_t
+		long create_revision;           //  int32_t
+		long prev_revision;             //  int32_t
+		long lease;                     //  int32_t
+		sequence<octet> value;          //  std::vector<uint8_t>
+		sequence<octet> old_value;      //  std::vector<uint8_t>
+  	};
+ 	#pragma keylist Msg id
+};
+
+module IdentifierTracker
+{
+	struct MaxIdMsg
+	{
+		unsigned long maxid;			// uint32_t
+	};
+	#pragma keylist MaxIdMsg maxid
+};
